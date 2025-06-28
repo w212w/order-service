@@ -53,3 +53,38 @@ type Item struct {
 	Brand       string `json:"brand"`
 	Status      int    `json:"status"`
 }
+
+type ErrorResponse struct {
+	Message string `json:"message"`
+}
+
+type OrderResponse struct {
+	OrderUID    string           `json:"order_uid"`
+	TrackNumber string           `json:"track_number"`
+	Entry       string           `json:"entry"`
+	Delivery    DeliveryResponse `json:"delivery"`
+	Payment     PaymentResponse  `json:"payment"`
+	Items       []ItemResponse   `json:"items"`
+	DateCreated string           `json:"date_created"`
+}
+
+type DeliveryResponse struct {
+	Name    string `json:"name"`
+	Phone   string `json:"phone"`
+	City    string `json:"city"`
+	Address string `json:"address"`
+}
+
+type PaymentResponse struct {
+	Amount       int    `json:"amount"`
+	Currency     string `json:"currency"`
+	GoodsTotal   int    `json:"goods_total"`
+	DeliveryCost int    `json:"delivery_cost"`
+}
+
+type ItemResponse struct {
+	Name       string `json:"name"`
+	Price      int    `json:"price"`
+	Brand      string `json:"brand"`
+	TotalPrice int    `json:"total_price"`
+}

@@ -1,10 +1,16 @@
 package main
 
 import (
+	"log"
+	"net/http"
 	"order-service/config"
+	"order-service/internal/handlers"
+	"order-service/internal/repository"
 	"order-service/internal/storage"
 	"order-service/internal/storage/cache"
 	"time"
+
+	"github.com/gorilla/mux"
 )
 
 func main() {
@@ -13,21 +19,13 @@ func main() {
 	defer db.Close()
 	c := cache.NewCache(100, 1*time.Minute)
 
-	// data, err := os.ReadFile("api/model.json")
-	// if err != nil {
-	// 	log.Fatalf("failed to read JSON: %v", err)
-	// }
+	orderRepo := repository.NewPostgresOrderRepository(db)
+	orderHandler := handlers.NewHandler(c, orderRepo)
 
-	// var order entity.Order
-	// if err := json.Unmarshal(data, &order); err != nil {
-	// 	log.Fatalf("failed to parse JSON: %v", err)
-	// }
+	router := mux.NewRouter()
+	router.HandleFunc("/order/{order_uid}", orderHandler.GetOrder).Methods("GET")
 
-	// // Сохраняем заказ
-	// repo := repository.NewPostgresOrderRepository(db)
-	// if err := repo.Save(&order); err != nil {
-	// 	log.Fatalf("failed to save order: %v", err)
-	// }
+	log.Println("Server is starting on: 8081...")
+	log.Fatal(http.ListenAndServe(":8081", router))
 
-	// fmt.Println("Order saved successfully!")
 }
