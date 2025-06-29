@@ -7,10 +7,12 @@ COPY ../go.mod ../go.sum ./
 RUN go mod download
 
 COPY . .
+COPY ./web ./web
 
-RUN go build -o order-service ./cmd/order-service \
-    && go clean -cache -modcache
+RUN go build -o order-service ./cmd/order-service && \
+    go build -o producer ./cmd/producer && \
+    go clean -cache -modcache
 
-EXPOSE 8080
+EXPOSE 8081
 
 CMD ["/app/order-service"]

@@ -4,12 +4,13 @@ import (
 	"database/sql"
 	"fmt"
 	"order-service/internal/entity"
+	"time"
 )
 
 type OrderRepository interface {
 	Save(order *entity.Order) error
 	GetByUID(orderUID string) (*entity.Order, error)
-	GetAll() ([]*entity.Order, error)
+	GetAll(cacheSize int) ([]*entity.Order, error)
 }
 
 type PostgresOrderRepository struct {
@@ -96,6 +97,8 @@ func (r *PostgresOrderRepository) GetByUID(uid string) (*entity.Order, error) {
 	payment := entity.Payment{}
 	items := []entity.Item{}
 
+	// Тест для проверки работы кэша
+	time.Sleep(1 * time.Second)
 	// Поиск заказа в БД
 	err := r.db.QueryRow(`
 		SELECT order_uid, track_number, entry, locale, internal_signature,
@@ -161,9 +164,9 @@ func (r *PostgresOrderRepository) GetByUID(uid string) (*entity.Order, error) {
 	return order, nil
 }
 
-func (r *PostgresOrderRepository) GetAll() ([]*entity.Order, error) {
+func (r *PostgresOrderRepository) GetAll(cacheSize int) ([]*entity.Order, error) {
 	// Поиск всех uid заказов в БД
-	rows, err := r.db.Query(`SELECT order_uid FROM orders`)
+	rows, err := r.db.Query(fmt.Sprintf(`SELECT order_uid FROM orders ORDER BY date_created DESC LIMIT %d`, cacheSize))
 	if err != nil {
 		return nil, fmt.Errorf("[error] get all orders: %w", err)
 	}
