@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Wildberries Style Order Lookup</title>
+  <title>Поиск заказа</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <style>
     body {
@@ -57,7 +57,7 @@
       max-width: 600px;
       white-space: pre-wrap;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      display: none; /* Скрыт по умолчанию */
+      display: none;
     }
 
     pre.visible {
@@ -79,12 +79,11 @@
       const orderId = document.getElementById('orderId').value.trim();
       const resultEl = document.getElementById('result');
 
-      // Сбросим состояние перед каждым новым поиском
       resultEl.textContent = "";
       resultEl.classList.remove('visible');
 
       if (!orderId) {
-        resultEl.textContent = "⚠️ Введите order_uid";
+        resultEl.textContent = "Order_uid не введён";
         resultEl.classList.add('visible');
         return;
       }
@@ -92,7 +91,7 @@
       try {
         const res = await fetch(`/order/${orderId}`);
         if (!res.ok) {
-          resultEl.textContent = `❌ Заказ не найден (код: ${res.status})`;
+          resultEl.textContent = `Заказ не найден (код: ${res.status})`;
           resultEl.classList.add('visible');
           return;
         }
