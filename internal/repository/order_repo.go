@@ -97,7 +97,7 @@ func (r *PostgresOrderRepository) GetByUID(uid string) (*entity.Order, error) {
 	payment := entity.Payment{}
 	items := []entity.Item{}
 
-	// Тест для проверки работы кэша
+	// ЗАДЕРЖКА для проверки работы кэша
 	time.Sleep(1 * time.Second)
 	// Поиск заказа в БД
 	err := r.db.QueryRow(`

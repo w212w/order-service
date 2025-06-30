@@ -52,7 +52,7 @@ services:
       --replication-factor 1
       --partitions 1
       --topic orders-topic &&
-      echo '✅ Kafka topic created'"
+      echo 'Kafka topic created'"
     networks:
       - internal
 

@@ -12,19 +12,21 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
+const countMessage int = 15 // Количество отправляемых сообщений в топик
+
 func main() {
 	rand.Seed(time.Now().UnixNano())
 
 	// Kafka producer
 	writer := kafka.Writer{
-		Addr:     kafka.TCP("kafka:9092", "localhost:9092"),
+		Addr:     kafka.TCP("kafka:9092"),
 		Topic:    "orders-topic",
 		Balancer: &kafka.LeastBytes{},
 	}
 	defer writer.Close()
 
-	// 15 сообщений (заказов) для отправки
-	for i := 0; i < 15; i++ {
+	// Сообщения (заказы) для отправки с рандомным orderUID
+	for i := 0; i < countMessage; i++ {
 		orderUID := fmt.Sprintf("orderTEST%d", rand.Intn(1000000))
 		order := e.Order{
 			OrderUID:    orderUID,

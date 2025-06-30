@@ -18,7 +18,7 @@ import (
 
 const (
 	cacheSize int = 5 // Размер кэша (количество хранимых заказов)
-	cacheTTL  int = 1 // Количество минут - TTL для кэша
+	cacheTTL  int = 5 // Количество минут - TTL для кэша
 )
 
 func main() {
@@ -36,7 +36,7 @@ func main() {
 		log.Fatalf("[error] failed to preload cache: %v", err)
 	}
 	c.Load(orders)
-	log.Printf("Cache preloaded ...\n")
+	log.Printf("Cache preloaded...\n")
 
 	router := mux.NewRouter()
 	router.HandleFunc("/order/{order_uid}", orderHandler.GetOrder).Methods("GET")
@@ -50,7 +50,7 @@ func main() {
 
 	// Kafka consumer
 	consumer := kafka.NewConsumer(
-		[]string{"kafka:9092", "localhost:9092"},
+		[]string{"kafka:9092"},
 		"orders-topic",
 		"orders-group",
 		orderRepo,
