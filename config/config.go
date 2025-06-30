@@ -7,6 +7,8 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// Незаконченный пример загрузки конфига, приватные данные в открытом виде
+
 type Config struct {
 	DBHost     string
 	DBPort     string

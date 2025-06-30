@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Order Lookup</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; }
+    input { padding: 0.5rem; font-size: 1rem; }
+    button { padding: 0.5rem; font-size: 1rem; margin-left: 0.5rem; }
+    pre { margin-top: 1rem; background: #f0f0f0; padding: 1rem; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>🔍 Поиск заказа</h1>
+  <input type="text" id="orderId" placeholder="Введите order_uid">
+  <button onclick="getOrder()">Поиск</button>
+  <pre id="result"></pre>
+
+  <script>
+    async function getOrder() {
+      const orderId = document.getElementById('orderId').value.trim();
+      const resultEl = document.getElementById('result');
+
+      if (!orderId) {
+        resultEl.textContent = "⚠️ Введите order_uid";
+        return;
+      }
+
+      try {
+        const res = await fetch(`/order/${orderId}`);
+        if (!res.ok) {
+          resultEl.textContent = `❌ Заказ не найден (код: ${res.status})`;
+          return;
+        }
+
+        const data = await res.json();
+        resultEl.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        resultEl.textContent = `Ошибка: ${err}`;
+      }
+    }
+  </script>
+</body>
+</html>
