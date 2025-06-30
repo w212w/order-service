@@ -1,28 +1,91 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Order Lookup</title>
+  <title>Wildberries Style Order Lookup</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <style>
-    body { font-family: sans-serif; padding: 2rem; }
-    input { padding: 0.5rem; font-size: 1rem; }
-    button { padding: 0.5rem; font-size: 1rem; margin-left: 0.5rem; }
-    pre { margin-top: 1rem; background: #f0f0f0; padding: 1rem; white-space: pre-wrap; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f2eaff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .icon {
+      font-size: 4rem;
+      color: #9b59b6;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      color: #6a1b9a;
+      margin-bottom: 1.5rem;
+    }
+
+    input {
+      padding: 0.7rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 0.7rem 1rem;
+      margin-left: 1rem;
+      background: #9b59b6;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #7b3fa0;
+    }
+
+    pre {
+      margin-top: 2rem;
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      max-width: 600px;
+      white-space: pre-wrap;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      display: none; /* Скрыт по умолчанию */
+    }
+
+    pre.visible {
+      display: block;
+    }
   </style>
 </head>
 <body>
-  <h1>🔍 Поиск заказа</h1>
-  <input type="text" id="orderId" placeholder="Введите order_uid">
-  <button onclick="getOrder()">Поиск</button>
-  <pre id="result"></pre>
+  <i class="bi bi-box-seam icon"></i>
+  <h1>Поиск заказа</h1>
+  <div>
+    <input id="orderId" placeholder="Введите order_uid">
+    <button onclick="getOrder()">Поиск</button>
+  </div>
+  <pre id="result" class=""></pre>
 
   <script>
     async function getOrder() {
       const orderId = document.getElementById('orderId').value.trim();
       const resultEl = document.getElementById('result');
 
+      // Сбросим состояние перед каждым новым поиском
+      resultEl.textContent = "";
+      resultEl.classList.remove('visible');
+
       if (!orderId) {
         resultEl.textContent = "⚠️ Введите order_uid";
+        resultEl.classList.add('visible');
         return;
       }
 
@@ -30,13 +93,16 @@
         const res = await fetch(`/order/${orderId}`);
         if (!res.ok) {
           resultEl.textContent = `❌ Заказ не найден (код: ${res.status})`;
+          resultEl.classList.add('visible');
           return;
         }
 
         const data = await res.json();
         resultEl.textContent = JSON.stringify(data, null, 2);
+        resultEl.classList.add('visible');
       } catch (err) {
         resultEl.textContent = `Ошибка: ${err}`;
+        resultEl.classList.add('visible');
       }
     }
   </script>
